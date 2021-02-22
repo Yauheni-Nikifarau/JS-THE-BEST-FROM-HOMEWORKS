@@ -1,0 +1,150 @@
+* {
+	margin: 0;
+	padding: 0;
+}
+
+.site {
+	padding-top: 30px;
+}
+
+.todolist {
+	width: 400px;
+	margin: 0 auto;
+	text-align: center;
+	background-color: #ddd;
+}
+
+.todolist-title {
+	padding: 10px 30px;
+	color: #fff;
+	font-size: 26px;
+	font-weight: bold;
+	text-transform: uppercase;
+	background-color: #00F;
+}
+
+.todolist-input {
+	padding: 10px 30px;
+}
+
+.todolist-input input {
+	width: 80%;
+	padding: 10px;
+	font-size: 20px;
+}
+
+.todolist-input input:focus {
+	outline: none;
+}
+
+.todolist-item {
+	padding: 20px 5px;
+	font-weight: bold;
+	font-size: 20px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.todolist-item:not(:nth-last-child(2)) {
+	border-bottom: 3px solid #555;
+}
+
+.item-text {
+	max-width: 50%;
+}
+
+.item-text:hover {
+	cursor: pointer;
+}
+
+.item-checkbox {
+	width: 40px;
+	height: 40px;
+	border: 2px solid #000;
+	position: relative;
+}
+
+.item-checkbox span {
+	border: 4px solid #000;
+	border-radius: 4px;
+	display: none;
+	background-color: #000;
+	position: absolute;
+}
+
+.item-checkbox span:first-child {
+	width: 20%;
+	left: 5%;
+	top: 45%;
+	transform: rotate(45deg);
+}
+
+.item-checkbox span:last-child {
+	width: 50%;
+	left: 18%;
+	top: 34%;
+	transform: rotate(-45deg);
+}
+
+.item-close {
+	width: 40px;
+	height: 40px;
+	position: relative;
+}
+
+.item-checkbox:hover, .item-close:hover {
+	cursor: pointer;
+}
+
+.item-close span {
+	border: 4px solid #000;
+	border-radius: 4px;
+	display: block;
+	width: 80%;
+	background-color: #000;
+	position: absolute;
+	left: 5%;
+}
+
+.item-close span:first-child {
+	top: 40%;
+	transform: rotate(45deg);
+}
+
+.item-close span:last-child {
+	bottom: 40%;
+	transform: rotate(-45deg);
+}
+
+.checked .item-checkbox {
+	background-color: rgb(66, 173, 45);
+}
+
+.checked .item-checkbox span {
+	display: block;
+}
+
+.checked .item-text {
+	color: rgb(136, 135, 135);
+	text-decoration: line-through;
+}
+
+.list-clear {
+	padding: 10px;
+	text-transform: uppercase;
+	background-color: #00f;
+	font-size: 26px;
+	font-weight: bold;
+	text-align: center;
+	color: #fff;
+	display: none;
+}
+
+.todolist-item ~ .list-clear {
+	display: block;
+}
+
+.list-clear:hover {
+	cursor: pointer;
+}
