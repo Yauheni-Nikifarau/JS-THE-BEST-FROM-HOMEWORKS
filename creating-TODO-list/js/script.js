@@ -102,6 +102,7 @@ todoInput.addEventListener("keyup", function () {
 
 function getString(question, defaultString) {
     let string = prompt(question, defaultString);
-    if ((string = string.trim()) == '') getString(question, defaultString);
-    return string;
+    if ((string = string.trim()) != '') return string;
+    return getString(question, defaultString);
+    
 }
