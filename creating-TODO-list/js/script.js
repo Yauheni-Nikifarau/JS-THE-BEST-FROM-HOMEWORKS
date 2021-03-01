@@ -74,7 +74,7 @@ let Item = function (value) {
 //////////////////////////////////////////////////////////////////////////////
 // ФУНКЦИИ 
 
-todoInput.addEventListener("keyup", function () {
+todoInput.addEventListener("keyup", function (vent) {
     if ((event.code == "Enter" || event.code == "NumpadEnter") && (this.value = this.value.trim()) != '') {
         let item = new Item(this.value);
         this.value = '';

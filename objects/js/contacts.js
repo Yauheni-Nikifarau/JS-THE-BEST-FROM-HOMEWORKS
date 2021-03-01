@@ -1,82 +1,129 @@
-let Contacts = function () {
-    let Contact = function (name, surname, age, phone) {
-        this.name = name;
-        this.surname = surname;
-        this.age = age;
-        this.phone = phone;
-    }
+let Blocknote = function (id) {
+    let contacts = new Array(),
+        element = document.querySelector(`#${id}`),
+        tableElem = document.createElement('table'),
+        controlPanel = document.createElement('div'),
+        buttonAdd = document.createElement('button'),
+        buttonRemove = document.createElement('button'),
+        self = this;
 
-    this.blocknote = [];
+    tableElem.classList.add('table-contacts');
+    buttonAdd.textContent = 'Добавить контакт';
+    buttonAdd.classList.add('add');
+    buttonRemove.textContent = 'Удалить контакт';
+    buttonRemove.classList.add('remove');
+    controlPanel.appendChild(buttonAdd);
+    controlPanel.appendChild(buttonRemove);
+    element.append(tableElem);
+    element.append(controlPanel);
     
-    this.createContact = function () {
-        let name = getString('Введите имя'),
-            surname = getString('Введите фамилию'),
-            age = getPositiveIntMin('Введите возраст?(старше 18)', 18);
+    this.addContact = function (contact) {
+        contacts.push(contact);
+    }
+    this.removeContact = function (number) {
+        contacts.splice(number-1,1);
+    }
+    this.getContact = function () {
+        let name = getString('Введите имя контакта?'),
+            surname = getString('Введите фамилию контакта'),
             phone = getPhone(),
-            contact = new Contact(name, surname, age, phone);
-
-        this.blocknote.push(contact);
+            contact = new Contact(name, surname, phone),
+            message = `Предлагается добавить контакт: \nИмя: ${name}\nФамилия: ${surname}\nТелефон: ${phone}.`;
+        if (confirm(message)) return contact;
     }
 
-    this.addingContacts = function () {
-        if (confirm('Хотите добавить контакт?')) {
-            do {
-                this.createContact();
-            } while (confirm('Хотите добавить еще контакт?'));
+
+    this.update = function () {
+        let table = '<thead><tr><th>Номер</th><th>Имя</th><th>Фамилия</th><th>Телефон</th></tr></thead><tbody>',
+            num = 1;
+        for (let contact of contacts) {
+            table += `<tr><td>${num}</td><td>${contact.name}</td><td>${contact.surname}</td><td>${contact.phone}</td></tr>`;
+            num++;
         }
+        table += '</tbody>';
+        element.querySelector('.table-contacts').innerHTML = table;
+    }
+    this.getContactsList = function () {
+        return contacts;
     }
 
-    this.removing = function () {
-        if (confirm('Хотите удалить контакт?')) {
-            do {
-                if (this.blocknote.length == 0) {
-                    alert('У вас и так никого нет в контактах.');
-                    break;
-                }
-                alert('Выберите номер контакта, который хотите удалить');
-                this.info();
-                let key = getPositiveInt("Введите номер контакта, который хотите удалить.") - 1;
-                if (key >= this.blocknote.length) {
-                    alert('Нет контакта под таким номером.');
-                } else {
-                    this.removeContact(key);
-                }
-            } while (confirm('Хотите удалить еще контакт?'));
-        }
-    }
-
-    this.info = function () {
-        let message = '';
-        for (let i = 0; i < this.blocknote.length; i++) {
-            message += `${i+1}. Имя: ${this.blocknote[i].name} ---- Фамилия: ${this.blocknote[i].surname}.\nТелефон: ${this.blocknote[i].phone} ---- Возраст: ${this.blocknote[i].age}.\n`
-        }
-        alert(message);
-    }
-
-    this.removeContact = function (i) {
-        this.blocknote.splice(i,1);
-        alert('Контак удалён!');
-    }
-
-    this.get = function () {
-        if (confirm('Поиграемся с контактами?')) {
-            this.addingContacts();
-            this.info()
-            this.removing();
-            this.info()
-        }
-        return Contacts;
-    }
+    controlPanel.querySelector('.remove').addEventListener('click', function () {
+        let num = getIntMinMax('Введите номер удаляемого контакта', 1, contacts.length);
+        self.removeContact(num);
+        self.update();
+    });
+    controlPanel.querySelector('.add').addEventListener('click', function () {
+        let contact = self.getContact();
+        if (contact != undefined) self.addContact(contact);
+        self.update();
+    });
 }
 
-
-let Contact = function (name, surname, age, phone) {
+let Contact = function (name, surname, phone) {
     this.name = name;
     this.surname = surname;
-    this.age = age;
     this.phone = phone;
 }
 
-let blocknote = new Contacts();
-blocknote.get();
-console.log(blocknote);
+// let firstBlocknote = new Blocknote('contacts');
+// firstBlocknote.addContact(new Contact('Евгений', 'Никифоров', '+375333467666'));
+// firstBlocknote.addContact(new Contact('Никитос', 'Евлампьев', '+375444567821'));
+// firstBlocknote.addContact(new Contact('Партос', 'Геннадьев', '+375331234567'));
+// firstBlocknote.addContact(new Contact('Арамис', 'Жернов', '+375297845698'));
+// firstBlocknote.addContact(new Contact('Дантос', 'Дантосин', '+3752943861578'));
+// firstBlocknote.update();
+
+
+let searchBlocknote = function (id) {
+    Blocknote.apply(this, arguments);
+    let self = this;
+    this.search = function (str) {
+        str = str.toLowerCase();
+        let contacts = self.getContactsList();
+        let arResult = new Array();
+        for (let contact of contacts) {
+            for (let note in contact) {
+                note = contact[note].toLowerCase();
+                if (note.includes(str)) {
+                    arResult.push(contact);
+                    break;
+                }
+            }
+        }
+        let table = '<thead><tr><th>Номер</th><th>Имя</th><th>Фамилия</th><th>Телефон</th></tr></thead><tbody>',
+            num = 1;
+        for (let contact of arResult) {
+            table += `<tr><td>${num}</td><td>${contact.name}</td><td>${contact.surname}</td><td>${contact.phone}</td></tr>`;
+            num++;
+        }
+        table += '</tbody>';
+        element.querySelector('.table-contacts').innerHTML = table;
+    }
+    let searchInput = document.createElement('input'),
+        searchFunc = this.search,
+        element = document.querySelector(`#${id}`);
+    searchInput.classList.add('search');
+    element.append(searchInput);
+    element.querySelector('.search').addEventListener('keyup', function (event) {
+        if (event.code == "Enter") {
+            searchFunc(this.value);
+            this.value = '';
+        }
+    });
+    let reset = document.createElement('button');
+    reset.textContent = 'Сбросить поиск';
+    reset.classList.add('reset');
+    element.appendChild(reset);
+    reset = element.querySelector('.reset');
+    reset.addEventListener('click', function (event) {
+        self.update();
+    });
+}
+
+let blocknote2 = new searchBlocknote('contacts2');
+blocknote2.addContact(new Contact('Евгений', 'Никифоров', '+375333467666'));
+blocknote2.addContact(new Contact('Никитос', 'Евлампьев', '+375444567821'));
+blocknote2.addContact(new Contact('Партос', 'Геннадьев', '+375331234567'));
+blocknote2.addContact(new Contact('Арамис', 'Жернов', '+375297845698'));
+blocknote2.addContact(new Contact('Дантос', 'Дантосин', '+3752943861578'));
+blocknote2.update();

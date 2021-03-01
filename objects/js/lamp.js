@@ -1,20 +1,48 @@
-let Lamp = function () {
-    this.get = function () {
-        this.cost = getPositiveNumber('Введите стоимость электроэнергии(руб)', 0.19);
-        this.power = getExactString('Лампочка включена', 'on', 'on', 'off');
-        if (this.power == 'on') {
-            this.watt = getPositiveInt('Введите мощность лампочки(Ватт)', 100);
-            this.time = getPositiveInt('Введите время работы лампы(мин)', 360);
-            this.sum = (this.watt/1000) * (this.time/60) * this.cost;
-            alert(`У вас счёт за электроэнергию на ${this.sum.toFixed(2)} руб.`);            
-            return Lamp;
-        } else {
-            alert('По нулям, лампочка не работает');
-            return Lamp;
-        }
+let Lamp = function (name, watt) {
+    name = name || 'Xiaomi';
+    watt = watt || 10;
+    let status = false;
+    this.on = function () {
+        status = true;
+    }
+    this.off = function () {
+        status = false;
+    }
+    this.getStatus = function () {
+        return status;
     }
 }
 
-let lamp = new Lamp;
-lamp.get();
-console.log(lamp);
+let EconomicLamp = function (name, watt, tarif) {
+    Lamp.apply(this, arguments);
+    let on = this.on,
+        off = this.off,
+        timeStart, timeEnd,
+        pay = 0;
+        
+    tarif = tarif || 0.19,
+        
+    this.on = function () {
+        on.call(this);
+        timeStart = new Date();
+        timeStart = timeStart.getTime();
+    }
+    this.off = function () {
+        off.call(this);
+        timeEnd = new Date();
+        timeEnd = timeEnd.getTime();
+        this.check();
+    }
+    this.check = function () {
+        let time = timeEnd - timeStart;
+        pay += (time / 3600000) * (watt / 1000);
+    }
+    this.alertCheck = function () {
+        console.log(`Вам счёт на ${pay} р.`);
+    }
+    this.resetPay = function () {
+        pay = 0;
+    }
+}
+
+let xiaomi = new EconomicLamp ('xiaomi', 10, 20);

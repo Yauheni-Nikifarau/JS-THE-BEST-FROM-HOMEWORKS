@@ -4,7 +4,7 @@
 
 function getString(question, defaultString) {
     let string = prompt(question, defaultString);
-    if ((string = string.trim()) == '') getString(question, defaultString);
+    if ((string = string.trim()) == '') string = getString(question, defaultString);
     return string;
 }
 function getExactString(question, defaultString, ...variants) {
@@ -89,4 +89,12 @@ function checkPhone (phone)  {
     let regexp = /(?:375|80)(?:33|44|29|25|17|21|16|23|15|22)\d{7}/g;
 
     return (phone.match(regexp) == null) ? false : (phone.match(regexp)[0] == phone);
+}
+
+function getIntMinMax (question, min, max) {
+    let num = min - 1;
+    while (num < min || num > max) {
+        num = getInt(question);
+    }
+    return num;
 }
